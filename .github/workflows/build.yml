@@ -10,34 +10,25 @@ jobs:
   build:
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            name: "Ubuntu"
+            name: "Linux x64"
             asset_name: "MCRandomProxy-Linux"
-          - os: macos-latest
-            name: "macOS"
-            asset_name: "MCRandomProxy-macOS"
           - os: windows-latest
             name: "Windows"
             asset_name: "MCRandomProxy-Windows.exe"
-          - os: ubuntu-latest
-            name: "Raspberry Pi"
-            asset_name: "MCRandomProxy-Raspi"
 
     runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies (Linux/macOS)
-        if: matrix.os != 'windows-latest'
+      - name: Install dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y g++ cmake make
-          if [ "${{ matrix.name }}" == "Raspberry Pi" ]; then
-            sudo apt-get install -y g++-arm-linux-gnueabihf
-            export CC=arm-linux-gnueabihf-gcc
-            export CXX=arm-linux-gnueabihf-g++
-          fi
 
       - name: Install dependencies (Windows)
         if: matrix.os == 'windows-latest'
@@ -56,4 +47,3 @@ jobs:
         with:
           name: ${{ matrix.asset_name }}
           path: ./build/MCRandomProxy
-
