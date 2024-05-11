@@ -1,4 +1,4 @@
-name: C++ CI Build with Enhanced Windows Support
+name: C++ CI Build
 
 on:
   push:
@@ -9,31 +9,20 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
             name: "Linux x64"
             asset_name: "MCRandomProxy-Linux"
-            cc: "gcc"
-            cxx: "g++"
           - os: windows-latest
-            name: "Windows MSVC"
+            name: "Windows"
             asset_name: "MCRandomProxy-Windows.exe"
-            cc: "cl"
-            cxx: "cl"
-            build_env_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set up environment (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          cmd "${{ matrix.build_env_script }}"
 
       - name: Install dependencies (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -44,11 +33,11 @@ jobs:
       - name: Install dependencies (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          choco install ninja cmake --version=3.21.3
-          choco install visualstudio2019buildtools --includeOptional
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          choco install mingw
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja"
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build --config Release
@@ -57,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.asset_name }}
-          path: ./build/${{ matrix.asset_name }}
+          path: ./build/MCRandomProxy
