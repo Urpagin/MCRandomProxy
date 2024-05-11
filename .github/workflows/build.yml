@@ -15,11 +15,11 @@ jobs:
           - os: ubuntu-latest
             name: "Linux x64"
             asset_name: "MCRandomProxy-Linux"
-            executable_name: "MCRandomProxy"
+            filepath: "./build/MCRandomProxy"
           - os: windows-latest
             name: "Windows"
             asset_name: "MCRandomProxy-Windows.exe"
-            executable_name: "MCRandomProxy.exe"
+            filepath: "./build/Release/MCRandomProxy.exe"
 
     runs-on: ${{ matrix.os }}
 
@@ -48,4 +48,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.asset_name }}
-          path: ./build/Release/${{ matrix.executable_name }}
+          path: ./build/Release/${{ matrix.filepath }}
