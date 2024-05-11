@@ -1,4 +1,4 @@
-name: C++ CI Build
+name: C++ CI Build with Enhanced Windows Support
 
 on:
   push:
@@ -9,20 +9,31 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest ]
         include:
           - os: ubuntu-latest
             name: "Linux x64"
             asset_name: "MCRandomProxy-Linux"
+            cc: "gcc"
+            cxx: "g++"
           - os: windows-latest
-            name: "Windows"
+            name: "Windows MSVC"
             asset_name: "MCRandomProxy-Windows.exe"
+            cc: "cl"
+            cxx: "cl"
+            build_env_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set up environment (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cmd "${{ matrix.build_env_script }}"
 
       - name: Install dependencies (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -33,17 +44,11 @@ jobs:
       - name: Install dependencies (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          echo "Updating MSYS2 packages"
-          pacman -Syu --noconfirm
-          echo "Installing MinGW and CMake with MSYS2"
-          pacman -S --noconfirm mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
-          echo "Adding MinGW bin to PATH"
-          echo "C:\\msys64\\mingw64\\bin" >> $GITHUB_PATH
-        shell: msys2 {0}
-
+          choco install ninja cmake --version=3.21.3
+          choco install visualstudio2019buildtools --includeOptional
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja"
 
       - name: Build
         run: cmake --build build --config Release
@@ -52,4 +57,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.asset_name }}
-          path: ./build/MCRandomProxy
+          path: ./build/${{ matrix.asset_name }}
