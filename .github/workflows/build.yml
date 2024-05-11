@@ -44,9 +44,6 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
-      - name: List build directory
-        run: ls -la ./build/Release
-
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
