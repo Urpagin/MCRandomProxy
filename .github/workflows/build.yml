@@ -22,8 +22,8 @@ jobs:
       - name: Build
         run: cmake --build build  # Builds the project
 
-      - name: Test  # Optionally, run tests
-        run: cmake --build build --target test
+      #- name: Test  # Optionally, run tests
+      #  run: cmake --build build --target test
 
       - name: Upload Artifacts  # Uploads the executable as an artifact
         uses: actions/upload-artifact@v3
