@@ -1,0 +1,32 @@
+name: C++ CI Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Specifies the runner environment
+
+    steps:
+      - uses: actions/checkout@v3  # Checks-out your repository
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y g++ cmake make  # Installs G++, CMake, and Make
+
+      - name: Configure CMake
+        run: cmake -S . -B build  # Configures CMake
+
+      - name: Build
+        run: cmake --build build  # Builds the project
+
+      - name: Test  # Optionally, run tests
+        run: cmake --build build --target test
+
+      - name: Upload Artifacts  # Uploads the executable as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: executable
+          path: ./build/your_executable_name
