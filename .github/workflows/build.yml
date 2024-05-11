@@ -8,25 +8,52 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Specifies the runner environment
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: "Ubuntu"
+            asset_name: "MCRandomProxy-Linux"
+          - os: macos-latest
+            name: "macOS"
+            asset_name: "MCRandomProxy-macOS"
+          - os: windows-latest
+            name: "Windows"
+            asset_name: "MCRandomProxy-Windows.exe"
+          - os: ubuntu-latest
+            name: "Raspberry Pi"
+            asset_name: "MCRandomProxy-Raspi"
 
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3  # Checks-out your repository
+      - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y g++ cmake make  # Installs G++, CMake, and Make
+      - name: Install dependencies (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ cmake make
+          if [ "${{ matrix.name }}" == "Raspberry Pi" ]; then
+            sudo apt-get install -y g++-arm-linux-gnueabihf
+            export CC=arm-linux-gnueabihf-gcc
+            export CXX=arm-linux-gnueabihf-g++
+          fi
+
+      - name: Install dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          choco install mingw
 
       - name: Configure CMake
-        run: cmake -S . -B build  # Configures CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build  # Builds the project
+        run: cmake --build build --config Release
 
-      #- name: Test  # Optionally, run tests
-      #  run: cmake --build build --target test
-
-      - name: Upload Artifacts  # Uploads the executable as an artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: executable
+          name: ${{ matrix.asset_name }}
           path: ./build/MCRandomProxy
+
