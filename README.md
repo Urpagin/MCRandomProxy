@@ -26,9 +26,9 @@ At each new connection, you'll connect to a random server on the specified file 
 
 
 And for the how, the program uses Asio (a networking library in C++) to route all the incoming packets from you (the client)
-to some server chose at random, and forward all packets coming from the random server to the client (you).
+to some server chosen at random, and forward all packets coming from the random server to the client (you).
 
-This also means that every packet exchanged can be read and also modified by the program, although currently that is not
+This also means that every packet exchanged can be read and also modified by the program 😉😉😉😉😉, although currently that is not
 the case.
 
 ## Installation
