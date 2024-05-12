@@ -12,7 +12,7 @@
 Session::Session(asio::ip::tcp::socket client_socket)
         : client_socket_(std::move(client_socket)),
           server_socket_(asio::make_strand(client_socket_.get_executor())),
-          rnd_srv(RandomServer("/home/urpagin/CLionProjects/AsioLearning/src/servers.txt")) {}
+          rnd_srv(RandomServer()) {}
 
 
 void Session::start() {
@@ -25,6 +25,13 @@ void Session::connect_to_server() {
 
     server_socket_.async_connect(server_endpoint, [this, self](const asio::error_code &ec) {
         if (!ec) {
+
+            std::cout << "[ Connecting " <<
+            client_socket_.remote_endpoint().address().to_string() <<
+            ":" << client_socket_.remote_endpoint().port() <<
+            " to " << server_socket_.remote_endpoint().address().to_string() <<
+            ":" << server_socket_.remote_endpoint().port() << " ]" << std::endl;
+
             read_from_client();
             read_from_server();
         } else {

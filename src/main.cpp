@@ -1,5 +1,6 @@
 #include "Server.h"
 #include <asio.hpp>
+#include "RandomServer.h"
 
 int main() {
     // here we create the io_context
