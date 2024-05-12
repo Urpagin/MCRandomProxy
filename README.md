@@ -26,9 +26,9 @@ At each new connection, you'll connect to a random server on the specified file 
 
 
 And for the how, the program uses Asio (a networking library in C++) to route all the incoming packets from you (the client)
-to some server chose at random, and forward all packets coming from the random server to the client (you).
+to some server chosen at random, and forward all packets coming from the random server to the client (you).
 
-This also means that every packet exchanged can be read and also modified by the program, although currently that is not
+This also means that every packet exchanged can be read and also modified by the program 😉😉😉😉😉, although currently that is not
 the case.
 
 ## Installation
@@ -37,13 +37,32 @@ the case.
 
 There is a prebuilt binary for x64 systems.
 
-As for other architectures, you must build it yourself.
+As for other architectures, you must build it yourself:
+
+1. Clone
+```
+git clone https://github.com/Urpagin/MCRandomProxy && cd MCRandomProxy
+```
+2. Make Build Directory
+```
+mkdir build && cd build
+```
+3. Build
+```
+cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build . --config Release -- -j 16
+```
+The program is compiled and ready to be executed (`./MCRandomProxy`). Now make the `servers.txt` file next to the binary.
+
+4. Make & Populate `servers.txt`
+```
+vim servers.txt
+```
 
 ### Windows 🪟
 
 There is a prebuilt binary for x64 systems.
 
-Please to have Microsoft Visual C++ Redistributable (vcredist)
+Requires Microsoft Visual C++ Redistributable (vcredist) to be installed:
 
 Useful links:
 
