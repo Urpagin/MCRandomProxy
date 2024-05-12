@@ -37,13 +37,32 @@ the case.
 
 There is a prebuilt binary for x64 systems.
 
-As for other architectures, you must build it yourself.
+As for other architectures, you must build it yourself:
+
+1. Clone
+```
+git clone https://github.com/Urpagin/MCRandomProxy && cd MCRandomProxy
+```
+2. Make Build Directory
+```
+mkdir build && cd build
+```
+3. Build
+```
+cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build . --config Release -- -j 16
+```
+The program is compiled and ready to be executed (`./MCRandomProxy`). Now make the `servers.txt` file next to the binary.
+
+4. Make & Populate `servers.txt`
+```
+vim servers.txt
+```
 
 ### Windows 🪟
 
 There is a prebuilt binary for x64 systems.
 
-Please to have Microsoft Visual C++ Redistributable (vcredist)
+Requires Microsoft Visual C++ Redistributable (vcredist) to be installed:
 
 Useful links:
 
