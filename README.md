@@ -35,7 +35,7 @@ the case.
 
 ### Linux 🐧
 
-Thernmap -sn 192.168.1.0/24e is a prebuilt binary for x64 systems.
+There is a prebuilt binary for x64 systems.
 
 As for other architectures, you must build it yourself:
 
